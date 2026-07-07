@@ -4,19 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Informasi Produk - Double Two Interior</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 650px; margin: 20px auto; padding: 15px; background: #f4f6f9; color: #333; }
         .box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
         h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; transition: all 0.3s; }
+        input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; transition: all 0.3s; margin-bottom: 10px; }
         input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        
+        /* Gaya Tombol Kamera */
+        .btn-camera { width: 100%; background: #10b981; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-camera:hover { background: #059669; }
+        
+        /* Area Kamera HP */
+        #reader { width: 100%; border-radius: 8px; overflow: hidden; border: none; background: #000; display: none; margin-bottom: 15px; }
+        
         .loading { color: #64748b; font-style: italic; display: none; margin-top: 10px; }
         .result-card { display: none; background: #f8fafc; border-left: 6px solid #3b82f6; padding: 20px; border-radius: 6px; }
         .product-title { font-size: 22px; font-weight: bold; color: #1e293b; margin-bottom: 15px; }
         .info-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         .info-row { font-size: 15px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; display: flex; justify-content: space-between; }
         .info-row strong { color: #475569; }
-        .info-row span { text-align: right; font-weight: 5px; color: #0f172a; }
+        .info-row span { text-align: right; font-weight: 500; color: #0f172a; }
         .badge { background: #e2e8f0; color: #334155; padding: 3px 10px; border-radius: 4px; font-size: 14px; font-weight: bold; }
     </style>
 </head>
@@ -24,13 +33,18 @@
 
     <div class="box">
         <h2>Double Two Interior</h2>
-        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Arahkan kursor ke dalam kotak, lalu lakukan scan pada barcode sampel produk.</p>
-        <!-- Input untuk menangkap tembakan barcode scanner -->
-        <input type="text" id="barcodeInput" placeholder="Klik disini sebelum melakukan scan..." autofocus autocomplete="off">
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Pilih metode scan di bawah ini menggunakan hardware scanner atau kamera internal smartphone.</p>
+        
+        <button class="btn-camera" id="toggleCameraBtn" onclick="toggleCamera()">
+            📷 Buka Kamera Scan HP
+        </button>
+
+        <div id="reader"></div>
+
+        <input type="text" id="barcodeInput" placeholder="Klik disini jika menggunakan hardware scanner..." autofocus autocomplete="off">
         <p class="loading" id="loadingText">⏳ Mengambil data terbaru dari Google Sheets...</p>
     </div>
 
-    <!-- Tampilan Informasi Detail Produk -->
     <div class="box result-card" id="resultCard">
         <div class="product-title" id="pNama">-</div>
         <div class="info-grid">
@@ -50,8 +64,9 @@
         const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScNAy0w1lHYGke4r8BL9D-9ZpwJMlpk2Joh0Z0pEI_XSlXxhldetTXzCL_MnQfbEOrT-uu6XAqIfte/pub?output=csv";
         
         let databaseProduk = [];
+        let html5QrcodeScanner = null;
+        let isCameraOpen = false;
 
-        // Fungsi Load Data Otomatis dari Google Sheets
         async function loadDatabase() {
             document.getElementById('loadingText').style.display = 'block';
             try {
@@ -61,37 +76,25 @@
                 document.getElementById('loadingText').style.display = 'none';
                 console.log("Database Sukses Dimuat. Total data: " + databaseProduk.length);
             } catch (error) {
-                document.getElementById('loadingText').innerText = "❌ Gagal memuat database. Periksa pengaturan File > Publish to Web.";
+                document.getElementById('loadingText').innerText = "❌ Gagal memuat database. Periksa internet.";
             }
         }
 
-        // Fungsi Parse CSV ke Array Object JavaScript (Sesuai dengan nama kolom Anda)
         function csvToArray(text) {
             const lines = text.split("\n");
-            // Membersihkan spasi atau karakter aneh pada baris judul kolom (Baris 1)
             const headers = lines[0].split(",").map(h => h.trim().replace(/^["']|["']$/g, ''));
             const result = [];
-            
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i]) continue;
-                
-                // Logika pemisah koma dengan penanganan tanda kutip pada nominal harga
                 let currentline = [];
                 let insideQuote = false;
                 let entries = "";
-                
                 for (let char of lines[i]) {
-                    if (char === '"') {
-                        insideQuote = !insideQuote;
-                    } else if (char === ',' && !insideQuote) {
-                        currentline.push(entries.trim());
-                        entries = "";
-                    } else {
-                        entries += char;
-                    }
+                    if (char === '"') { insideQuote = !insideQuote; } 
+                    else if (char === ',' && !insideQuote) { currentline.push(entries.trim()); entries = ""; } 
+                    else { entries += char; }
                 }
                 currentline.push(entries.trim());
-
                 const obj = {};
                 for (let j = 0; j < headers.length; j++) {
                     obj[headers[j]] = currentline[j] ? currentline[j].replace(/^["']|["']$/g, '') : "";
@@ -101,23 +104,13 @@
             return result;
         }
 
-        // Event listener saat alat barcode scanner menembakkan kode (Memicu tombol Enter)
-        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const scannedSku = this.value.toUpperCase().trim();
-                cariProduk(scannedSku);
-                this.value = ''; // Mengosongkan text box agar siap menerima scan berikutnya
-            }
-        });
-
-        // Logika Pencarian Data Produk berdasarkan SKU
-        function cariProduk(sku) {
-            // Mencari kecocokan kode SKU dari Kolom "SKU" di sheet Anda
-            const produk = databaseProduk.find(item => item["SKU"] && item["SKU"].toUpperCase() === sku);
+        // Jalankan Fungsi Scan dari Hasil Kamera HP maupun Scanner Fisik
+        function eksekusiPencarian(skuCode) {
+            const cleanSku = skuCode.toUpperCase().trim();
+            const produk = databaseProduk.find(item => item["SKU"] && item["SKU"].toUpperCase() === cleanSku);
             const card = document.getElementById('resultCard');
 
             if (produk) {
-                // Menampilkan data sesuai dengan Header Kolom pada Google Sheets Anda
                 document.getElementById('pNama').innerText = produk["Nama Sampel"] || "Tanpa Nama";
                 document.getElementById('pSku').innerText = produk["SKU"] || "-";
                 document.getElementById('pKategori').innerText = produk["Kategori"] || "-";
@@ -127,15 +120,62 @@
                 document.getElementById('pSatuan').innerText = produk["Satuan Jual"] || "-";
                 document.getElementById('pMerk').innerText = produk["Kode Merk"] || "-";
                 document.getElementById('pSupplier').innerText = produk["Gudang Asal Produk (Supplier)"] || "-";
-
                 card.style.display = 'block';
+                
+                // Getaran pendek di HP saat scan berhasil (hanya berfungsi di Android)
+                if (navigator.vibrate) navigator.vibrate(100);
             } else {
                 card.style.display = 'none';
-                alert("Kode SKU '" + sku + "' tidak ditemukan dalam database!");
+                alert("Kode '" + cleanSku + "' tidak terdaftar di Google Sheets!");
             }
         }
 
-        // Menjalankan pengambilan data saat aplikasi pertama kali dibuka
+        // Event Scanner Fisik Kasir (Tombol Enter)
+        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                eksekusiPencarian(this.value);
+                this.value = '';
+            }
+        });
+
+        // Logika ON/OFF Kamera HP
+        function toggleCamera() {
+            const readerDiv = document.getElementById('reader');
+            const btn = document.getElementById('toggleCameraBtn');
+
+            if (!isCameraOpen) {
+                readerDiv.style.display = 'block';
+                btn.innerText = "🛑 Tutup Kamera";
+                btn.style.background = "#dc2626";
+                
+                // Inisialisasi parameter scanner kamera belakang HP
+                html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+                    fps: 10, 
+                    qrbox: { width: 250, height: 250 },
+                    rememberLastUsedCamera: true
+                });
+                
+                html5QrcodeScanner.render((decodedText) => {
+                    // Jika kamera membaca Barcode/QR Code
+                    eksekusiPencarian(decodedText);
+                    // Matikan kamera setelah sukses scan agar menghemat baterai HP
+                    toggleCamera(); 
+                }, (error) => {
+                    // Mengabaikan error pencarian real-time sebelum fokus objek didapat
+                });
+                isCameraOpen = true;
+            } else {
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.clear().then(() => {
+                        readerDiv.style.display = 'none';
+                    });
+                }
+                btn.innerText = "📷 Buka Kamera Scan HP";
+                btn.style.background = "#10b981";
+                isCameraOpen = false;
+            }
+        }
+
         window.onload = loadDatabase;
     </script>
 </body>
