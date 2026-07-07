@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Produk - Double Two Interior</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 650px; margin: 20px auto; padding: 15px; background: #f4f6f9; color: #333; }
+        .box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; transition: all 0.3s; }
+        input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+        .loading { color: #64748b; font-style: italic; display: none; margin-top: 10px; }
+        .result-card { display: none; background: #f8fafc; border-left: 6px solid #3b82f6; padding: 20px; border-radius: 6px; }
+        .product-title { font-size: 22px; font-weight: bold; color: #1e293b; margin-bottom: 15px; }
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .info-row { font-size: 15px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; display: flex; justify-content: space-between; }
+        .info-row strong { color: #475569; }
+        .info-row span { text-align: right; font-weight: 5px; color: #0f172a; }
+        .badge { background: #e2e8f0; color: #334155; padding: 3px 10px; border-radius: 4px; font-size: 14px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Double Two Interior</h2>
+        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Arahkan kursor ke dalam kotak, lalu lakukan scan pada barcode sampel produk.</p>
+        <!-- Input untuk menangkap tembakan barcode scanner -->
+        <input type="text" id="barcodeInput" placeholder="Klik disini sebelum melakukan scan..." autofocus autocomplete="off">
+        <p class="loading" id="loadingText">⏳ Mengambil data terbaru dari Google Sheets...</p>
+    </div>
+
+    <!-- Tampilan Informasi Detail Produk -->
+    <div class="box result-card" id="resultCard">
+        <div class="product-title" id="pNama">-</div>
+        <div class="info-grid">
+            <div class="info-row"><strong>Kode SKU</strong> <span id="pSku">-</span></div>
+            <div class="info-row"><strong>Kategori</strong> <span id="pKategori">-</span></div>
+            <div class="info-row"><strong>Sub Kategori</strong> <span id="pSubKategori">-</span></div>
+            <div class="info-row"><strong>Ukuran / Lebar Bahan</strong> <span id="pLebar">-</span></div>
+            <div class="info-row"><strong>Harga Jual</strong> <span id="pHarga">-</span></div>
+            <div class="info-row"><strong>Satuan</strong> <span class="badge" id="pSatuan">-</span></div>
+            <div class="info-row"><strong>Kode Merk</strong> <span id="pMerk">-</span></div>
+            <div class="info-row"><strong>Asal Supplier</strong> <span id="pSupplier">-</span></div>
+        </div>
+    </div>
+
+    <script>
+        // MASUKKAN LINK CSV PUBLIKASI GOOGLE SHEETS ANDA DI BAWAH INI
+        const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/ID_SHEET_ANDA/pub?output=csv";
+        
+        let databaseProduk = [];
+
+        // Fungsi Load Data Otomatis dari Google Sheets
+        async function loadDatabase() {
+            document.getElementById('loadingText').style.display = 'block';
+            try {
+                const response = await fetch(googleSheetCsvUrl);
+                const dataText = await response.text();
+                databaseProduk = csvToArray(dataText);
+                document.getElementById('loadingText').style.display = 'none';
+                console.log("Database Sukses Dimuat. Total data: " + databaseProduk.length);
+            } catch (error) {
+                document.getElementById('loadingText').innerText = "❌ Gagal memuat database. Periksa pengaturan File > Publish to Web.";
+            }
+        }
+
+        // Fungsi Parse CSV ke Array Object JavaScript (Sesuai dengan nama kolom Anda)
+        function csvToArray(text) {
+            const lines = text.split("\n");
+            // Membersihkan spasi atau karakter aneh pada baris judul kolom (Baris 1)
+            const headers = lines[0].split(",").map(h => h.trim().replace(/^["']|["']$/g, ''));
+            const result = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i]) continue;
+                
+                // Logika pemisah koma dengan penanganan tanda kutip pada nominal harga
+                let currentline = [];
+                let insideQuote = false;
+                let entries = "";
+                
+                for (let char of lines[i]) {
+                    if (char === '"') {
+                        insideQuote = !insideQuote;
+                    } else if (char === ',' && !insideQuote) {
+                        currentline.push(entries.trim());
+                        entries = "";
+                    } else {
+                        entries += char;
+                    }
+                }
+                currentline.push(entries.trim());
+
+                const obj = {};
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j] ? currentline[j].replace(/^["']|["']$/g, '') : "";
+                }
+                result.push(obj);
+            }
+            return result;
+        }
+
+        // Event listener saat alat barcode scanner menembakkan kode (Memicu tombol Enter)
+        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const scannedSku = this.value.toUpperCase().trim();
+                cariProduk(scannedSku);
+                this.value = ''; // Mengosongkan text box agar siap menerima scan berikutnya
+            }
+        });
+
+        // Logika Pencarian Data Produk berdasarkan SKU
+        function cariProduk(sku) {
+            // Mencari kecocokan kode SKU dari Kolom "SKU" di sheet Anda
+            const produk = databaseProduk.find(item => item["SKU"] && item["SKU"].toUpperCase() === sku);
+            const card = document.getElementById('resultCard');
+
+            if (produk) {
+                // Menampilkan data sesuai dengan Header Kolom pada Google Sheets Anda
+                document.getElementById('pNama').innerText = produk["Nama Sampel"] || "Tanpa Nama";
+                document.getElementById('pSku').innerText = produk["SKU"] || "-";
+                document.getElementById('pKategori').innerText = produk["Kategori"] || "-";
+                document.getElementById('pSubKategori').innerText = produk["Sub Kategori"] || "-";
+                document.getElementById('pLebar').innerText = produk["Lebar Bahan / Ukuran Produk"] || "-";
+                document.getElementById('pHarga').innerText = produk["Harga Jual"] || "-";
+                document.getElementById('pSatuan').innerText = produk["Satuan Jual"] || "-";
+                document.getElementById('pMerk').innerText = produk["Kode Merk"] || "-";
+                document.getElementById('pSupplier').innerText = produk["Gudang Asal Produk (Supplier)"] || "-";
+
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+                alert("Kode SKU '" + sku + "' tidak ditemukan dalam database!");
+            }
+        }
+
+        // Menjalankan pengambilan data saat aplikasi pertama kali dibuka
+        window.onload = loadDatabase;
+    </script>
+</body>
+</html>
