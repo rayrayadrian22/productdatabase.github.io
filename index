@@ -47,7 +47,7 @@
 
     <script>
         // MASUKKAN LINK CSV PUBLIKASI GOOGLE SHEETS ANDA DI BAWAH INI
-        const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/ID_SHEET_ANDA/pub?output=csv";
+        const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScNAy0w1lHYGke4r8BL9D-9ZpwJMlpk2Joh0Z0pEI_XSlXxhldetTXzCL_MnQfbEOrT-uu6XAqIfte/pub?output=csv";
         
         let databaseProduk = [];
 
