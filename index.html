@@ -3,180 +3,1090 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Informasi Produk - Double Two Interior</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <title>Database Produk - Double Two Interior</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 650px; margin: 20px auto; padding: 15px; background: #f4f6f9; color: #333; }
-        .box { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); margin-bottom: 20px; }
-        h2 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        input { width: 100%; padding: 14px; font-size: 16px; border: 2px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; transition: all 0.3s; margin-bottom: 10px; }
-        input:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
-        
-        /* Gaya Tombol Kamera */
-        .btn-camera { width: 100%; background: #10b981; color: white; border: none; padding: 12px; font-size: 15px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .btn-camera:hover { background: #059669; }
-        
-        /* Area Kamera HP */
-        #reader { width: 100%; border-radius: 8px; overflow: hidden; border: none; background: #000; display: none; margin-bottom: 15px; }
-        
-        .loading { color: #64748b; font-style: italic; display: none; margin-top: 10px; }
-        .result-card { display: none; background: #f8fafc; border-left: 6px solid #3b82f6; padding: 20px; border-radius: 6px; }
-        .product-title { font-size: 22px; font-weight: bold; color: #1e293b; margin-bottom: 15px; }
-        .info-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-        .info-row { font-size: 15px; padding: 6px 0; border-bottom: 1px dashed #e2e8f0; display: flex; justify-content: space-between; }
-        .info-row strong { color: #475569; }
-        .info-row span { text-align: right; font-weight: 500; color: #0f172a; }
-        .badge { background: #e2e8f0; color: #334155; padding: 3px 10px; border-radius: 4px; font-size: 14px; font-weight: bold; }
+        :root {
+            --bg-main: #f8fafc;
+            --surface: #ffffff;
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #d97706; /* Gold/Amber Double Two */
+            --accent-hover: #b45309;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 3rem;
+        }
+
+        /* Navbar & Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 2rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand h1 span {
+            color: var(--accent);
+            background: rgba(217, 119, 6, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .brand p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-accent {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-outline {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Stats Bar */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-info h4 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .stat-info p {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-top: 0.2rem;
+        }
+
+        /* Controls Section (Search & Filters) */
+        .controls {
+            background: var(--surface);
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--text-main);
+            background-color: var(--surface);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .view-btn {
+            padding: 0.5rem 0.8rem;
+            border: none;
+            background: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .view-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Table View */
+        .table-container {
+            background: var(--surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid var(--border);
+        }
+
+        th {
+            padding: 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background-color 0.15s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        td {
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .sku-badge {
+            font-family: monospace;
+            font-weight: 700;
+            color: var(--primary-light);
+            background: #e2e8f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .price-tag {
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #f1f5f9;
+            color: var(--text-main);
+        }
+
+        /* Card View */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            display: none; /* Default hidden, managed by JS */
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .card-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .spec-item span {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .spec-item strong {
+            color: var(--text-main);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Detail Modal (15 Components) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            width: 100%;
+            max-width: 750px;
+            max-height: 90vh;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            z-index: 10;
+        }
+
+        .modal-header h3 {
+            font-size: 1.25rem;
+            color: var(--primary);
+        }
+
+        .btn-close {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .btn-close:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .spec-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-section h4 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.25rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: #f8fafc;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.2rem;
+        }
+
+        .detail-item div {
+            font-weight: 600;
+            color: var(--text-main);
+            word-break: break-word;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            background: #f8fafc;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        /* Loading & Empty State */
+        .state-container {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--text-muted);
+        }
+
+        .state-container i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 200;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h2>Double Two Interior</h2>
-        <p style="font-size: 14px; color: #64748b; margin-bottom: 15px;">Pilih metode scan di bawah ini menggunakan hardware scanner atau kamera internal smartphone.</p>
+    <header>
+        <div class="header-container">
+            <div class="brand">
+                <h1>Double Two Interior <span>Showroom 22</span></h1>
+                <p>Digital Product Knowledge & Inventory Database System</p>
+            </div>
+            <div class="header-actions">
+                <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
+                <button class="btn btn-outline" onclick="document.getElementById('csvFileInput').click()">
+                    <i class="fa-solid fa-file-import"></i> Upload CSV Manual
+                </button>
+                <button class="btn btn-accent" onclick="fetchCSVData()">
+                    <i class="fa-solid fa-rotate-right"></i> Sync Data Live
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
         
-        <button class="btn-camera" id="toggleCameraBtn" onclick="toggleCamera()">
-            📷 Buka Kamera Scan HP
-        </button>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                <div class="stat-info">
+                    <h4>Total Produk</h4>
+                    <p id="statTotal">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-tags"></i></div>
+                <div class="stat-info">
+                    <h4>Kategori Utama</h4>
+                    <p id="statCategories">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-trademark"></i></div>
+                <div class="stat-info">
+                    <h4>Jumlah Merk</h4>
+                    <p id="statBrands">0</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-warehouse"></i></div>
+                <div class="stat-info">
+                    <h4>Gudang Supplier</h4>
+                    <p id="statWarehouses">0</p>
+                </div>
+            </div>
+        </div>
 
-        <div id="reader"></div>
+        <div class="controls">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Cari berdasarkan SKU, Nama Sampel, Warna, atau Barcode...">
+            </div>
+            <div class="filter-group">
+                <select id="categoryFilter" class="filter-select">
+                    <option value="">Semua Kategori</option>
+                </select>
+                <select id="warehouseFilter" class="filter-select">
+                    <option value="">Semua Gudang</option>
+                </select>
+                <div class="view-toggle">
+                    <button class="view-btn active" id="btnTableView" title="Tampilan Tabel"><i class="fa-solid fa-table-list"></i></button>
+                    <button class="view-btn" id="btnCardView" title="Tampilan Kartu"><i class="fa-solid fa-grid-2"></i><i class="fa-solid fa-table-cells-large"></i></button>
+                </div>
+            </div>
+        </div>
 
-        <input type="text" id="barcodeInput" placeholder="Klik disini jika menggunakan hardware scanner..." autofocus autocomplete="off">
-        <p class="loading" id="loadingText">⏳ Mengambil data terbaru dari Google Sheets...</p>
-    </div>
+        <div id="tableView" class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Kategori</th>
+                        <th>Nama Sampel</th>
+                        <th>Warna</th>
+                        <th>Harga Jual</th>
+                        <th>Satuan</th>
+                        <th>Gudang</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    </tbody>
+            </table>
+        </div>
 
-    <div class="box result-card" id="resultCard">
-        <div class="product-title" id="pNama">-</div>
-        <div class="info-grid">
-            <div class="info-row"><strong>Kode SKU</strong> <span id="pSku">-</span></div>
-            <div class="info-row"><strong>Kategori</strong> <span id="pKategori">-</span></div>
-            <div class="info-row"><strong>Sub Kategori</strong> <span id="pSubKategori">-</span></div>
-            <div class="info-row"><strong>Ukuran / Lebar Bahan</strong> <span id="pLebar">-</span></div>
-            <div class="info-row"><strong>Harga Jual</strong> <span id="pHarga">-</span></div>
-            <div class="info-row"><strong>Satuan</strong> <span class="badge" id="pSatuan">-</span></div>
-            <div class="info-row"><strong>Kode Merk</strong> <span id="pMerk">-</span></div>
-            <div class="info-row"><strong>Asal Supplier</strong> <span id="pSupplier">-</span></div>
+        <div id="cardView" class="card-grid">
+            </div>
+
+        <div id="stateContainer" class="state-container" style="display: none;">
+            <i class="fa-solid fa-folder-open"></i>
+            <h3>Data Tidak Ditemukan</h3>
+            <p>Silakan periksa kata kunci pencarian Anda atau sinkronkan ulang database.</p>
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h3 id="modalTitle">Detail Spesifikasi Produk</h3>
+                    <span id="modalSkuBadge" class="sku-badge" style="margin-top: 4px; display: inline-block;">SKU</span>
+                </div>
+                <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="spec-section">
+                    <h4><i class="fa-solid fa-fingerprint"></i> 1. Identitas & Klasifikasi Produk</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item"><label>Barcode</label><div id="m_barcode">-</div></div>
+                        <div class="detail-item"><label>SKU (Stock Keeping Unit)</label><div id="m_sku">-</div></div>
+                        <div class="detail-item"><label>Kategori Utama</label><div id="m_kategori">-</div></div>
+                        <div class="detail-item"><label>Sub Kategori</label><div id="m_subkategori">-</div></div>
+                        <div class="detail-item"><label>Kode Merk / Brand</label><div id="m_merk">-</div></div>
+                    </div>
+                </div>
+
+                <div class="spec-section">
+                    <h4><i class="fa-solid fa-ruler-combined"></i> 2. Spesifikasi Material & Ukuran</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item"><label>Nama Sampel / Katalog</label><div id="m_sampel">-</div></div>
+                        <div class="detail-item"><label>Kode Warna</label><div id="m_warna">-</div></div>
+                        <div class="detail-item"><label>Lebar Bahan / Ukuran Produk</label><div id="m_ukuran">-</div></div>
+                        <div class="detail-item"><label>Spesifikasi Berat Bahan</label><div id="m_berat">-</div></div>
+                        <div class="detail-item"><label>Spesifikasi Komposisi Bahan</label><div id="m_komposisi">-</div></div>
+                        <div class="detail-item" style="grid-column: 1 / -1;"><label>Spesifikasi Fitur Unggulan</label><div id="m_fitur">-</div></div>
+                    </div>
+                </div>
+
+                <div class="spec-section">
+                    <h4><i class="fa-solid fa-tags"></i> 3. Harga Jual, Logistik & Aplikasi</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item"><label>Harga Jual Showroom</label><div id="m_harga" class="price-tag">-</div></div>
+                        <div class="detail-item"><label>Satuan Jual</label><div id="m_satuan">-</div></div>
+                        <div class="detail-item"><label>Gudang Asal (Supplier)</label><div id="m_gudang">-</div></div>
+                        <div class="detail-item" style="grid-column: 1 / -1;"><label>Penggunaan / Rekomendasi Ruangan</label><div id="m_penggunaan">-</div></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" style="color: var(--primary); border-color: var(--border);" onclick="copyToClipboard(currentSelectedSku, 'SKU berhasil disalin!')">
+                    <i class="fa-regular fa-copy"></i> Salin SKU
+                </button>
+                <button class="btn btn-accent" onclick="copyFullSpec()">
+                    <i class="fa-solid fa-share-nodes"></i> Salin Info Lengkap (WhatsApp)
+                </button>
+            </div>
         </div>
     </div>
 
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+        <span id="toastMsg">Pesan</span>
+    </div>
+
     <script>
-        // MASUKKAN LINK CSV PUBLIKASI GOOGLE SHEETS ANDA DI BAWAH INI
-        const googleSheetCsvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScNAy0w1lHYGke4r8BL9D-9ZpwJMlpk2Joh0Z0pEI_XSlXxhldetTXzCL_MnQfbEOrT-uu6XAqIfte/pub?output=csv";
+        // Tautan CSV Live Resmi Double Two Interior Showroom 22
+        const GOOGLE_SHEETS_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScNAy0w1lHYGke4r8BL9D-9ZpwJMlpk2Joh0Z0pEI_XSlXxhldetTXzCL_MnQfbEOrT-uu6XAqIfte/pub?output=csv";
         
-        let databaseProduk = [];
-        let html5QrcodeScanner = null;
-        let isCameraOpen = false;
+        let productsData = [];
+        let currentSelectedProduct = null;
+        let currentSelectedSku = "";
 
-        async function loadDatabase() {
-            document.getElementById('loadingText').style.display = 'block';
-            try {
-                const response = await fetch(googleSheetCsvUrl);
-                const dataText = await response.text();
-                databaseProduk = csvToArray(dataText);
-                document.getElementById('loadingText').style.display = 'none';
-                console.log("Database Sukses Dimuat. Total data: " + databaseProduk.length);
-            } catch (error) {
-                document.getElementById('loadingText').innerText = "❌ Gagal memuat database. Periksa internet.";
-            }
-        }
+        // 15 Komponen Pemetaan Header Row 1
+        const HEADERS_MAP = [
+            "Barcode", "SKU", "Kategori", "Nama Sampel", "Kode Warna", 
+            "Sub Kategori", "Harga Jual", "Satuan Jual", "Kode Merk", 
+            "Gudang Asal Produk (Supplier)", "Lebar Bahan / Ukuran Produk", 
+            "Spesifikasi Berat Bahan", "Spesifikasi Komposisi Bahan", 
+            "Spesifikasi Fitur", "Penggunaan"
+        ];
 
-        function csvToArray(text) {
-            const lines = text.split("\n");
-            const headers = lines[0].split(",").map(h => h.trim().replace(/^["']|["']$/g, ''));
-            const result = [];
-            for (let i = 1; i < lines.length; i++) {
-                if (!lines[i]) continue;
-                let currentline = [];
-                let insideQuote = false;
-                let entries = "";
-                for (let char of lines[i]) {
-                    if (char === '"') { insideQuote = !insideQuote; } 
-                    else if (char === ',' && !insideQuote) { currentline.push(entries.trim()); entries = ""; } 
-                    else { entries += char; }
-                }
-                currentline.push(entries.trim());
-                const obj = {};
-                for (let j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = currentline[j] ? currentline[j].replace(/^["']|["']$/g, '') : "";
-                }
-                result.push(obj);
-            }
-            return result;
-        }
-
-        // Jalankan Fungsi Scan dari Hasil Kamera HP maupun Scanner Fisik
-        function eksekusiPencarian(skuCode) {
-            const cleanSku = skuCode.toUpperCase().trim();
-            const produk = databaseProduk.find(item => item["SKU"] && item["SKU"].toUpperCase() === cleanSku);
-            const card = document.getElementById('resultCard');
-
-            if (produk) {
-                document.getElementById('pNama').innerText = produk["Nama Sampel"] || "Tanpa Nama";
-                document.getElementById('pSku').innerText = produk["SKU"] || "-";
-                document.getElementById('pKategori').innerText = produk["Kategori"] || "-";
-                document.getElementById('pSubKategori').innerText = produk["Sub Kategori"] || "-";
-                document.getElementById('pLebar').innerText = produk["Lebar Bahan / Ukuran Produk"] || "-";
-                document.getElementById('pHarga').innerText = produk["Harga Jual"] || "-";
-                document.getElementById('pSatuan').innerText = produk["Satuan Jual"] || "-";
-                document.getElementById('pMerk').innerText = produk["Kode Merk"] || "-";
-                document.getElementById('pSupplier').innerText = produk["Gudang Asal Produk (Supplier)"] || "-";
-                card.style.display = 'block';
-                
-                // Getaran pendek di HP saat scan berhasil (hanya berfungsi di Android)
-                if (navigator.vibrate) navigator.vibrate(100);
-            } else {
-                card.style.display = 'none';
-                alert("Kode '" + cleanSku + "' tidak terdaftar di Google Sheets!");
-            }
-        }
-
-        // Event Scanner Fisik Kasir (Tombol Enter)
-        document.getElementById('barcodeInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                eksekusiPencarian(this.value);
-                this.value = '';
-            }
+        // Inisialisasi Aplikasi
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchCSVData();
+            setupEventListeners();
         });
 
-        // Logika ON/OFF Kamera HP
-        function toggleCamera() {
-            const readerDiv = document.getElementById('reader');
-            const btn = document.getElementById('toggleCameraBtn');
+        function setupEventListeners() {
+            document.getElementById("searchInput").addEventListener("input", renderProducts);
+            document.getElementById("categoryFilter").addEventListener("change", renderProducts);
+            document.getElementById("warehouseFilter").addEventListener("change", renderProducts);
+            
+            document.getElementById("btnTableView").addEventListener("click", () => switchView('table'));
+            document.getElementById("btnCardView").addEventListener("click", () => switchView('card'));
+            
+            document.getElementById("csvFileInput").addEventListener("change", handleManualUpload);
+            
+            // Tutup modal jika klik di luar box
+            document.getElementById("detailModal").addEventListener("click", (e) => {
+                if (e.target === document.getElementById("detailModal")) closeModal();
+            });
+        }
 
-            if (!isCameraOpen) {
-                readerDiv.style.display = 'block';
-                btn.innerText = "🛑 Tutup Kamera";
-                btn.style.background = "#dc2626";
-                
-                // Inisialisasi parameter scanner kamera belakang HP
-                html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
-                    fps: 10, 
-                    qrbox: { width: 250, height: 250 },
-                    rememberLastUsedCamera: true
-                });
-                
-                html5QrcodeScanner.render((decodedText) => {
-                    // Jika kamera membaca Barcode/QR Code
-                    eksekusiPencarian(decodedText);
-                    // Matikan kamera setelah sukses scan agar menghemat baterai HP
-                    toggleCamera(); 
-                }, (error) => {
-                    // Mengabaikan error pencarian real-time sebelum fokus objek didapat
-                });
-                isCameraOpen = true;
+        function switchView(viewType) {
+            const tableView = document.getElementById("tableView");
+            const cardView = document.getElementById("cardView");
+            const btnTable = document.getElementById("btnTableView");
+            const btnCard = document.getElementById("btnCardView");
+
+            if (viewType === 'table') {
+                tableView.style.display = "block";
+                cardView.style.display = "none";
+                btnTable.classList.add("active");
+                btnCard.classList.remove("active");
             } else {
-                if (html5QrcodeScanner) {
-                    html5QrcodeScanner.clear().then(() => {
-                        readerDiv.style.display = 'none';
-                    });
-                }
-                btn.innerText = "📷 Buka Kamera Scan HP";
-                btn.style.background = "#10b981";
-                isCameraOpen = false;
+                tableView.style.display = "none";
+                cardView.style.display = "grid";
+                btnTable.classList.remove("active");
+                btnCard.classList.add("active");
             }
         }
 
-        window.onload = loadDatabase;
+        // Fetch Data CSV dari Google Sheets
+        async function fetchCSVData() {
+            showToast("Sedang menyinkronkan database...");
+            try {
+                const response = await fetch(GOOGLE_SHEETS_CSV_URL);
+                if (!response.ok) throw new Error("Gagal mengambil data jaringan.");
+                const csvText = await response.text();
+                parseCSV(csvText);
+                showToast("Database berhasil diperbarui!");
+            } catch (error) {
+                console.error("Error fetching CSV:", error);
+                showToast("Gagal sync online. Memuat data sampel fallback...");
+                loadFallbackData();
+            }
+        }
+
+        function handleManualUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                parseCSV(e.target.result);
+                showToast("File CSV manual berhasil dimuat!");
+            };
+            reader.readAsText(file);
+        }
+
+        // CSV Parser yang tahan terhadap koma di dalam tanda kutip (misal: "Rp 190,000")
+        function parseCSV(text) {
+            const lines = [];
+            let row = [];
+            let inQuotes = false;
+            let currentStr = '';
+
+            for (let i = 0; i < text.length; i++) {
+                const char = text[i];
+                const nextChar = text[i + 1];
+
+                if (char === '"' && inQuotes && nextChar === '"') {
+                    currentStr += '"';
+                    i++;
+                } else if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    row.push(currentStr.trim());
+                    currentStr = '';
+                } else if ((char === '\r' || char === '\n') && !inQuotes) {
+                    if (char === '\r' && nextChar === '\n') i++;
+                    row.push(currentStr.trim());
+                    if (row.some(val => val !== '')) lines.push(row);
+                    row = [];
+                    currentStr = '';
+                } else {
+                    currentStr += char;
+                }
+            }
+            if (currentStr || row.length > 0) {
+                row.push(currentStr.trim());
+                if (row.some(val => val !== '')) lines.push(row);
+            }
+
+            if (lines.length < 2) return;
+
+            // Mapping dari Row 1 (Header) ke baris data
+            const headers = lines[0];
+            productsData = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i];
+                const product = {};
+                
+                headers.forEach((header, index) => {
+                    // Bersihkan nama header agar cocok dengan pemetaan standar
+                    const cleanHeader = header.replace(/\r?\n|\r/g, " ").trim();
+                    product[cleanHeader] = values[index] || "-";
+                });
+
+                // Pastikan ada SKU agar valid
+                if (product["SKU"] && product["SKU"] !== "-") {
+                    productsData.push(product);
+                }
+            }
+
+            updateDashboardStats();
+            populateFilters();
+            renderProducts();
+        }
+
+        function updateDashboardStats() {
+            document.getElementById("statTotal").textContent = productsData.length;
+            
+            const categories = new Set(productsData.map(p => p["Kategori"]).filter(v => v !== "-"));
+            document.getElementById("statCategories").textContent = categories.size;
+
+            const brands = new Set(productsData.map(p => p["Kode Merk"]).filter(v => v !== "-"));
+            document.getElementById("statBrands").textContent = brands.size;
+
+            const warehouses = new Set(productsData.map(p => p["Gudang Asal Produk (Supplier)"]).filter(v => v !== "-"));
+            document.getElementById("statWarehouses").textContent = warehouses.size;
+        }
+
+        function populateFilters() {
+            const catSelect = document.getElementById("categoryFilter");
+            const whSelect = document.getElementById("warehouseFilter");
+            
+            // Simpan pilihan saat ini jika ada
+            const currentCat = catSelect.value;
+            const currentWh = whSelect.value;
+
+            catSelect.innerHTML = '<option value="">Semua Kategori</option>';
+            whSelect.innerHTML = '<option value="">Semua Gudang</option>';
+
+            const categories = [...new Set(productsData.map(p => p["Kategori"]).filter(v => v !== "-" && v))].sort();
+            categories.forEach(cat => {
+                catSelect.innerHTML += `<option value="${cat}" ${cat === currentCat ? 'selected' : ''}>${cat}</option>`;
+            });
+
+            const warehouses = [...new Set(productsData.map(p => p["Gudang Asal Produk (Supplier)"]).filter(v => v !== "-" && v))].sort();
+            warehouses.forEach(wh => {
+                whSelect.innerHTML += `<option value="${wh}" ${wh === currentWh ? 'selected' : ''}>${wh}</option>`;
+            });
+        }
+
+        function renderProducts() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const selectedCat = document.getElementById("categoryFilter").value;
+            const selectedWh = document.getElementById("warehouseFilter").value;
+
+            const filtered = productsData.filter(p => {
+                const matchSearch = (p["SKU"] || "").toLowerCase().includes(searchTerm) ||
+                                  (p["Nama Sampel"] || "").toLowerCase().includes(searchTerm) ||
+                                  (p["Kode Warna"] || "").toLowerCase().includes(searchTerm) ||
+                                  (p["Barcode"] || "").toLowerCase().includes(searchTerm);
+                
+                const matchCat = selectedCat === "" || p["Kategori"] === selectedCat;
+                const matchWh = selectedWh === "" || p["Gudang Asal Produk (Supplier)"] === selectedWh;
+
+                return matchSearch && matchCat && matchWh;
+            });
+
+            const tableBody = document.getElementById("tableBody");
+            const cardGrid = document.getElementById("cardView");
+            const stateContainer = document.getElementById("stateContainer");
+
+            if (filtered.length === 0) {
+                tableBody.innerHTML = "";
+                cardGrid.innerHTML = "";
+                stateContainer.style.display = "block";
+                return;
+            } else {
+                stateContainer.style.display = "none";
+            }
+
+            // Render Table
+            tableBody.innerHTML = filtered.map((p, idx) => `
+                <tr>
+                    <td><span class="sku-badge">${p["SKU"]}</span></td>
+                    <td><span class="category-tag">${p["Kategori"]}</span></td>
+                    <td><strong>${p["Nama Sampel"]}</strong></td>
+                    <td>${p["Kode Warna"]}</td>
+                    <td class="price-tag">${p["Harga Jual"]}</td>
+                    <td>${p["Satuan Jual"]}</td>
+                    <td>${p["Gudang Asal Produk (Supplier)"]}</td>
+                    <td>
+                        <button class="btn btn-accent" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;" onclick="openModal('${p["SKU"]}')">
+                            <i class="fa-solid fa-eye"></i> Detail 15 Komponen
+                        </button>
+                    </td>
+                </tr>
+            `).join("");
+
+            // Render Cards
+            cardGrid.innerHTML = filtered.map((p) => `
+                <div class="product-card">
+                    <div>
+                        <div class="card-header">
+                            <span class="category-tag">${p["Kategori"]} - ${p["Sub Kategori"]}</span>
+                            <span class="sku-badge">${p["SKU"]}</span>
+                        </div>
+                        <h4 class="card-title">${p["Nama Sampel"]} (${p["Kode Warna"]})</h4>
+                        <div class="card-specs">
+                            <div class="spec-item"><span>Merk / Supplier</span><strong>${p["Kode Merk"]} (${p["Gudang Asal Produk (Supplier)"]})</strong></div>
+                            <div class="spec-item"><span>Ukuran / Lebar</span><strong>${p["Lebar Bahan / Ukuran Produk"]}</strong></div>
+                            <div class="spec-item" style="grid-column: 1 / -1;"><span>Komposisi</span><strong>${p["Spesifikasi Komposisi Bahan"]}</strong></div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); display:block;">Harga Jual</span>
+                            <span class="price-tag" style="font-size: 1.1rem;">${p["Harga Jual"]} <small style="font-size: 0.7em; font-weight: normal; color: var(--text-muted);">/${p["Satuan Jual"]}</small></span>
+                        </div>
+                        <button class="btn btn-accent" style="padding: 0.5rem 0.9rem;" onclick="openModal('${p["SKU"]}')">
+                            Lihat Detail
+                        </button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        // Buka Modal & Isi 15 Komponen Row 1
+        function openModal(sku) {
+            const p = productsData.find(item => item["SKU"] === sku);
+            if (!p) return;
+
+            currentSelectedProduct = p;
+            currentSelectedSku = p["SKU"];
+
+            document.getElementById("modalTitle").textContent = `${p["Nama Sampel"]} (${p["Kode Warna"]})`;
+            document.getElementById("modalSkuBadge").textContent = p["SKU"];
+
+            // Mapping 15 Komponen
+            document.getElementById("m_barcode").textContent = p["Barcode"] || "-";
+            document.getElementById("m_sku").textContent = p["SKU"] || "-";
+            document.getElementById("m_kategori").textContent = p["Kategori"] || "-";
+            document.getElementById("m_sampel").textContent = p["Nama Sampel"] || "-";
+            document.getElementById("m_warna").textContent = p["Kode Warna"] || "-";
+            document.getElementById("m_subkategori").textContent = p["Sub Kategori"] || "-";
+            document.getElementById("m_harga").textContent = `${p["Harga Jual"]} (per ${p["Satuan Jual"]})`;
+            document.getElementById("m_satuan").textContent = p["Satuan Jual"] || "-";
+            document.getElementById("m_merk").textContent = p["Kode Merk"] || "-";
+            document.getElementById("m_gudang").textContent = p["Gudang Asal Produk (Supplier)"] || "-";
+            document.getElementById("m_ukuran").textContent = p["Lebar Bahan / Ukuran Produk"] || "-";
+            document.getElementById("m_berat").textContent = p["Spesifikasi Berat Bahan"] || "-";
+            document.getElementById("m_komposisi").textContent = p["Spesifikasi Komposisi Bahan"] || "-";
+            document.getElementById("m_fitur").textContent = p["Spesifikasi Fitur"] || "-";
+            document.getElementById("m_penggunaan").textContent = p["Penggunaan"] || "-";
+
+            document.getElementById("detailModal").classList.add("active");
+        }
+
+        function closeModal() {
+            document.getElementById("detailModal").classList.remove("active");
+        }
+
+        function copyToClipboard(text, msg) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(msg);
+            });
+        }
+
+        function copyFullSpec() {
+            if (!currentSelectedProduct) return;
+            const p = currentSelectedProduct;
+            const textToCopy = `*SPESIFIKASI PRODUK DOUBLE TWO INTERIOR*
+----------------------------------------
+*SKU:* ${p["SKU"]}
+*Produk:* ${p["Kategori"]} - ${p["Nama Sampel"]} (${p["Kode Warna"]})
+*Sub Kategori:* ${p["Sub Kategori"]}
+*Merk:* ${p["Kode Merk"]} (${p["Gudang Asal Produk (Supplier)"]})
+*Lebar / Ukuran:* ${p["Lebar Bahan / Ukuran Produk"]}
+*Berat:* ${p["Spesifikasi Berat Bahan"]}
+*Komposisi:* ${p["Spesifikasi Komposisi Bahan"]}
+*Fitur:* ${p["Spesifikasi Fitur"]}
+*Rekomendasi:* ${p["Penggunaan"]}
+----------------------------------------
+*Harga Jual:* ${p["Harga Jual"]} / ${p["Satuan Jual"]}
+
+_Dicuplik dari Database Resmi Showroom 22_`;
+            
+            copyToClipboard(textToCopy, "Spesifikasi lengkap berhasil disalin untuk WhatsApp!");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            document.getElementById("toastMsg").textContent = message;
+            toast.classList.add("show");
+            setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+
+        // Fallback Data jika Offline
+        function loadFallbackData() {
+            const sampleCSV = `Barcode,SKU,Kategori,Nama Sampel,Kode Warna,Sub Kategori,Harga Jual,Satuan Jual,Kode Merk,Gudang Asal Produk (Supplier),Lebar Bahan / Ukuran Produk,Spesifikasi Berat Bahan,Spesifikasi Komposisi Bahan,Spesifikasi Fitur,Penggunaan
+GOR-SD--010-NT-09B-PECAN,GOR-SD--010-NT-09B-PECAN,Gorden,SD-NATURAL,NT-09B-PECAN,Dimout,"Rp 190,000",meter,SD,Jakarta,280 cm,348 Gsm,20%LINEN 80%POLYESTER,Tahan Lama,Ruang Tamu & Kamar
+GOR-SD--010-NT-10B-IRON,GOR-SD--010-NT-10B-IRON,Gorden,SD-NATURAL,NT-10B-IRON,Dimout,"Rp 190,000",meter,SD,Jakarta,280 cm,348 Gsm,20%LINEN 80%POLYESTER,Tahan Lama,Ruang Tamu & Kamar
+GOR-IVO-001-,GOR-IVO-001-,Gorden,Ivory Blackout,A1,Dimout,"Rp 110,000",meter,CRD,Bandung,280 cm,300 Gsm,100% Polyester,Blokir Cahaya 80%,Kamar Tidur`;
+            parseCSV(sampleCSV);
+        }
     </script>
 </body>
 </html>
