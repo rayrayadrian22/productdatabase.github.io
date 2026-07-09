@@ -22,8 +22,6 @@
             --border: #333333;
             --success: #10b981;
             --price-color: #34d399;
-            --badge-bg: rgba(220, 38, 38, 0.15);
-            --badge-text: #fca5a5;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
@@ -43,8 +41,6 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
             --price-color: #059669;
-            --badge-bg: rgba(220, 38, 38, 0.1);
-            --badge-text: #dc2626;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -62,18 +58,16 @@
             background-color: var(--bg-main);
             color: var(--text-main);
             line-height: 1.5;
-            padding-bottom: 3rem;
+            padding-bottom: 4rem;
         }
 
-        /* Header / Navbar */
+        /* Header / Navbar (Dibuat Tidak Sticky Agar Hemat Tempat Saat Scroll) */
         header {
             background: var(--surface);
             border-bottom: 2px solid var(--accent);
             padding: 1.25rem 1.5rem;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: var(--shadow-lg);
+            position: static;
+            box-shadow: var(--shadow-md);
         }
 
         .header-container {
@@ -152,38 +146,6 @@
             border-color: var(--accent);
         }
 
-        /* Tombol Scan Barcode Memanjang Di Atas Search */
-        .scan-bar-container {
-            margin-bottom: 1rem;
-        }
-
-        .btn-scan-large {
-            width: 100%;
-            padding: 0.85rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
-            color: white;
-            border: none;
-            border-radius: var(--radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-        .btn-scan-large:hover, .btn-scan-large:active {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
-        }
-
-        .btn-scan-large i {
-            font-size: 1.3rem;
-        }
-
         /* Main Container */
         .container {
             max-width: 1400px;
@@ -215,7 +177,7 @@
             width: 44px;
             height: 44px;
             border-radius: 10px;
-            background: var(--badge-bg);
+            background: rgba(220, 38, 38, 0.15);
             color: var(--accent);
             display: flex;
             align-items: center;
@@ -238,14 +200,58 @@
             margin-top: 0.1rem;
         }
 
-        /* Controls / Search Area */
+        /* --- STICKY TOOLBAR (FREEZE SCAN + SEARCH BAR) --- */
+        .sticky-toolbar {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            background-color: var(--bg-main);
+            padding: 0.75rem 0 1rem 0;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.25);
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .sticky-toolbar-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .btn-scan-large {
+            width: 100%;
+            padding: 0.85rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .btn-scan-large:hover, .btn-scan-large:active {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        .btn-scan-large i {
+            font-size: 1.3rem;
+        }
+
         .controls {
             background: var(--surface);
-            padding: 1.25rem;
+            padding: 1rem 1.25rem;
             border-radius: var(--radius);
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
-            margin-bottom: 1.5rem;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
@@ -325,6 +331,7 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
+        /* --- END STICKY TOOLBAR --- */
 
         /* Table View */
         .table-container {
@@ -397,16 +404,98 @@
             color: var(--price-color);
         }
 
+        /* --- KUSTOMISASI WARNA BADGE KATEGORI (9 KATEGORI) --- */
         .category-tag {
             display: inline-block;
-            padding: 0.25rem 0.6rem;
+            padding: 0.25rem 0.65rem;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 600;
-            background: var(--badge-bg);
-            color: var(--badge-text);
-            border: 1px solid rgba(220, 38, 38, 0.3);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            border: 1px solid transparent;
+            white-space: nowrap;
         }
+
+        /* 1. Gorden (Biru / Blue) */
+        .cat-gorden {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        [data-theme="light"] .cat-gorden { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
+
+        /* 2. Vitrase (Cyan / Sky Blue) */
+        .cat-vitrase {
+            background: rgba(6, 182, 212, 0.15);
+            color: #22d3ee;
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+        [data-theme="light"] .cat-vitrase { background: #cffafe; color: #155e75; border-color: #a5f3fc; }
+
+        /* 3. Kain Sofa (Ungu / Indigo) */
+        .cat-sofa {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        [data-theme="light"] .cat-sofa { background: #ede9fe; color: #5b21b6; border-color: #ddd6fe; }
+
+        /* 4. Blinds (Oranye / Amber) */
+        .cat-blinds {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+        [data-theme="light"] .cat-blinds { background: #fef3c7; color: #92400e; border-color: #fde68a; }
+
+        /* 5. Wallpaper (Hijau Emerald) */
+        .cat-wallpaper {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        [data-theme="light"] .cat-wallpaper { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+
+        /* 6. Wallpanel (Hijau Lime / Yellow-Green) */
+        .cat-wallpanel {
+            background: rgba(132, 204, 22, 0.15);
+            color: #a3e635;
+            border-color: rgba(132, 204, 22, 0.3);
+        }
+        [data-theme="light"] .cat-wallpanel { background: #ecfccb; color: #3f6212; border-color: #d9f99d; }
+
+        /* 7. Flooring (Cokelat Kayu / Warm Brown) */
+        .cat-flooring {
+            background: rgba(180, 83, 9, 0.15);
+            color: #fb923c;
+            border-color: rgba(180, 83, 9, 0.3);
+        }
+        [data-theme="light"] .cat-flooring { background: #ffedd5; color: #9a3412; border-color: #fed7aa; }
+
+        /* 8. Karpet (Merah Muda / Rose Pink) */
+        .cat-karpet {
+            background: rgba(236, 72, 153, 0.15);
+            color: #f472b6;
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+        [data-theme="light"] .cat-karpet { background: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
+
+        /* 9. Sticker Kaca (Merah Brand / Crimson) */
+        .cat-sticker {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+        [data-theme="light"] .cat-sticker { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+
+        /* Default Kategori Lainnya (Abu-abu) */
+        .cat-default {
+            background: rgba(148, 163, 184, 0.15);
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+        [data-theme="light"] .cat-default { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
+        /* --- END WARNA BADGE KATEGORI --- */
 
         .btn-dropdown {
             background: var(--surface-light);
@@ -698,9 +787,7 @@
 
         /* --- PENYESUAIAN LAYAR HP (RESPONSIVE OPTIMIZATION) --- */
         @media (max-width: 768px) {
-            /* Matikan sifat sticky di HP agar saat scroll tidak menutupi tabel */
             header {
-                position: static;
                 padding: 1rem;
             }
 
@@ -717,7 +804,7 @@
                 justify-content: center;
             }
 
-            /* Ubah Grid Stat menjadi Lebih Ringkas (2 Kolom x 2 Baris) & Font Lebih Kecil */
+            /* Stat Lebih Kompak (2x2) */
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
@@ -738,7 +825,7 @@
             }
 
             .stat-info h4 {
-                font-size: 0.65rem; /* Lebih kecil & tidak makan tempat */
+                font-size: 0.65rem;
                 line-height: 1.2;
             }
 
@@ -746,9 +833,14 @@
                 font-size: 1.1rem;
             }
 
-            /* Controls di HP */
+            /* Sticky Toolbar Lebih Rapat di HP */
+            .sticky-toolbar {
+                padding: 0.5rem 0 0.75rem 0;
+                margin-bottom: 1rem;
+            }
+
             .controls {
-                padding: 0.85rem;
+                padding: 0.75rem;
             }
 
             .filter-group {
@@ -771,8 +863,8 @@
                 <p>Digital Product Knowledge & Inventory System</p>
             </div>
             <div class="header-actions">
-                <button class="btn btn-outline" id="themeToggleBtn" title="Ganti Tema Siang/Malam">
-                    <i class="fa-solid fa-sun" id="themeIcon"></i> <span id="themeText">Siang</span>
+                <button class="btn btn-outline" id="themeToggleBtn" title="Ganti Tema">
+                    <i class="fa-solid fa-sun" id="themeIcon"></i> <span id="themeText">Light Mode</span>
                 </button>
                 <input type="file" id="csvFileInput" accept=".csv" style="display: none;">
                 <button class="btn btn-outline" onclick="document.getElementById('csvFileInput').click()">
@@ -818,32 +910,32 @@
             </div>
         </div>
 
-        <div class="scan-bar-container">
-            <button class="btn-scan-large" onclick="openScanner()">
-                <i class="fa-solid fa-camera-viewfinder"></i>
-                <span>Scan Barcode / Kamera HP</span>
-            </button>
-        </div>
-
-        <div class="controls">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="searchInput" placeholder="Cari SKU, Nama Sampel, Warna, atau Barcode...">
-            </div>
-            <div class="filter-group">
-                <select id="categoryFilter" class="filter-select">
-                    <option value="">Semua Kategori</option>
-                </select>
-                <select id="warehouseFilter" class="filter-select">
-                    <option value="">Semua Gudang</option>
-                </select>
-                <div class="view-toggle">
-                    <button class="view-btn active" id="btnTableView" title="Tampilan Tabel"><i class="fa-solid fa-table-list"></i></button>
-                    <button class="view-btn" id="btnCardView" title="Tampilan Kartu"><i class="fa-solid fa-grid-2"></i><i class="fa-solid fa-table-cells-large"></i></button>
+        <div class="sticky-toolbar">
+            <div class="sticky-toolbar-inner">
+                <button class="btn-scan-large" onclick="openScanner()">
+                    <i class="fa-solid fa-camera-viewfinder"></i>
+                    <span>Scan Barcode / Kamera HP</span>
+                </button>
+                <div class="controls">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="Cari SKU, Nama Sampel, Warna, atau Barcode...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="">Semua Kategori</option>
+                        </select>
+                        <select id="warehouseFilter" class="filter-select">
+                            <option value="">Semua Gudang</option>
+                        </select>
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="btnTableView" title="Tampilan Tabel"><i class="fa-solid fa-table-list"></i></button>
+                            <button class="view-btn" id="btnCardView" title="Tampilan Kartu"><i class="fa-solid fa-grid-2"></i><i class="fa-solid fa-table-cells-large"></i></button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div id="tableView" class="table-container">
             <table>
                 <thead>
@@ -970,7 +1062,7 @@
             setupEventListeners();
         });
 
-        // --- FITUR LIGHT / DARK MODE ---
+        // --- FITUR LIGHT / DARK MODE (TEKS DIPERBARUI) ---
         function initTheme() {
             const savedTheme = localStorage.getItem("dti_theme") || "dark";
             document.documentElement.setAttribute("data-theme", savedTheme);
@@ -988,15 +1080,35 @@
         function updateThemeButton(theme) {
             const icon = document.getElementById("themeIcon");
             const text = document.getElementById("themeText");
+            // Jika sedang Light Mode, tombol menawarkan untuk pindah ke Dark Mode (dan sebaliknya)
             if (theme === "light") {
                 icon.className = "fa-solid fa-moon";
-                text.textContent = "Dark";
+                text.textContent = "Dark Mode";
             } else {
                 icon.className = "fa-solid fa-sun";
-                text.textContent = "Light";
+                text.textContent = "Light Mode";
             }
         }
         // --- END TEMA ---
+
+        // --- HELPER WARNA BADGE KATEGORI OTOMATIS (9 KATEGORI) ---
+        function getCategoryBadge(catName) {
+            const cat = (catName || "").toLowerCase().trim();
+            let cls = "cat-default";
+            
+            if (cat.includes("gorden")) cls = "cat-gorden";
+            else if (cat.includes("vitrase")) cls = "cat-vitrase";
+            else if (cat.includes("sofa")) cls = "cat-sofa";
+            else if (cat.includes("blind")) cls = "cat-blinds";
+            else if (cat.includes("wallpaper")) cls = "cat-wallpaper";
+            else if (cat.includes("wallpanel") || cat.includes("panel")) cls = "cat-wallpanel";
+            else if (cat.includes("floor") || cat.includes("vinyl") || cat.includes("spc")) cls = "cat-flooring";
+            else if (cat.includes("karpet") || cat.includes("rug")) cls = "cat-karpet";
+            else if (cat.includes("sticker") || cat.includes("kaca") || cat.includes("film") || cat.includes("sandblast")) cls = "cat-sticker";
+            
+            return `<span class="category-tag ${cls}">${catName || "-"}</span>`;
+        }
+        // --- END HELPER KATEGORI ---
 
         function setupEventListeners() {
             document.getElementById("themeToggleBtn").addEventListener("click", toggleTheme);
@@ -1220,7 +1332,7 @@
                 stateContainer.style.display = "none";
             }
 
-            // Render Table (Telah diubah menjadi 'Detail Spesifikasi')
+            // Render Table
             let tableHTML = "";
             filteredGroups.forEach((group, idx) => {
                 const p = group.parent;
@@ -1237,7 +1349,7 @@
                                 </button>
                             ` : ''}
                         </td>
-                        <td><span class="category-tag">${p["Kategori"]}</span></td>
+                        <td>${getCategoryBadge(p["Kategori"])}</td>
                         <td><strong>${p["Nama Sampel"]}</strong></td>
                         <td>${p["Kode Warna"] || "-"}</td>
                         <td class="price-tag">${p["Harga Jual"]}</td>
@@ -1260,7 +1372,7 @@
                                 </td>
                                 <td><span style="color: var(--text-muted); font-size: 0.8em;">${v["Sub Kategori"]}</span></td>
                                 <td><span style="color: var(--text-muted);">${v["Nama Sampel"]}</span></td>
-                                <td><strong style="color: var(--badge-text);">${v["Kode Warna"]}</strong></td>
+                                <td><strong style="color: var(--text-main);">${v["Kode Warna"]}</strong></td>
                                 <td class="price-tag">${v["Harga Jual"]}</td>
                                 <td>${v["Satuan Jual"]}</td>
                                 <td>${v["Gudang Asal Produk (Supplier)"]}</td>
@@ -1276,7 +1388,7 @@
             });
             tableBody.innerHTML = tableHTML;
 
-            // Render Cards (Telah diubah menjadi 'Detail Spesifikasi')
+            // Render Cards
             cardGrid.innerHTML = filteredGroups.map((group, idx) => {
                 const p = group.parent;
                 const varCount = group.variants.length;
@@ -1286,10 +1398,13 @@
                 <div class="product-card">
                     <div>
                         <div class="card-header">
-                            <span class="category-tag">${p["Kategori"]} - ${p["Sub Kategori"]}</span>
+                            <div>
+                                ${getCategoryBadge(p["Kategori"])}
+                                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 6px;">${p["Sub Kategori"]}</span>
+                            </div>
                             <span class="sku-badge">${p["SKU"]}</span>
                         </div>
-                        <h4 class="card-title">${p["Nama Sampel"]} ${p["Kode Warna"] !== "-" ? `(${p["Kode Warna"]})` : ''}</h4>
+                        <h4 class="card-title" style="margin-top: 0.5rem;">${p["Nama Sampel"]} ${p["Kode Warna"] !== "-" ? `(${p["Kode Warna"]})` : ''}</h4>
                         
                         <div class="card-specs">
                             <div class="spec-item"><span>Merk / Supplier</span><strong>${p["Kode Merk"]} (${p["Gudang Asal Produk (Supplier)"]})</strong></div>
@@ -1306,7 +1421,7 @@
                                     <div class="variant-item">
                                         <div>
                                             <span class="sku-badge" style="font-size: 0.75em;">${v["SKU"]}</span>
-                                            <span style="color: var(--badge-text); margin-left: 6px; font-weight: 600;">Warna: ${v["Kode Warna"]}</span>
+                                            <span style="color: var(--text-main); margin-left: 6px; font-weight: 600;">Warna: ${v["Kode Warna"]}</span>
                                         </div>
                                         <button class="btn btn-outline" style="padding: 0.2rem 0.5rem; font-size: 0.7rem;" onclick="openModal('${v["SKU"]}')">Detail</button>
                                     </div>
@@ -1480,7 +1595,14 @@ _Dicuplik dari Database Resmi Showroom 22_`;
             const sampleCSV = `Barcode,SKU,Kategori,Nama Sampel,Kode Warna,Sub Kategori,Harga Jual,Satuan Jual,Kode Merk,Gudang Asal Produk (Supplier),Lebar Bahan / Ukuran Produk,Spesifikasi Berat Bahan,Spesifikasi Komposisi Bahan,Spesifikasi Fitur,Penggunaan
 GOR-IVO-001-,GOR-IVO-001-,Gorden,Ivory Blackout,,Dimout,"Rp 110,000",meter,CRD,Bandung,280 cm,300 Gsm,100% Polyester,Blokir Cahaya 80%,Kamar Tidur
 GOR-IVO-001-A1,GOR-IVO-001-A1,Gorden,Ivory Blackout,A1,Dimout,"Rp 110,000",meter,CRD,Bandung,280 cm,300 Gsm,100% Polyester,Blokir Cahaya 80%,Kamar Tidur
-VIT-IVO-001-,VIT-IVO-001-,Vitrase,Ivory Blackout,,Vitrase,"Rp 70,000",meter,CRD,Bandung,300 cm,120 Gsm,100% Polyester,Transparan Elegan,Ruang Tamu`;
+VIT-IVO-001-,VIT-IVO-001-,Vitrase,Ivory Blackout,,Vitrase,"Rp 70,000",meter,CRD,Bandung,300 cm,120 Gsm,100% Polyester,Transparan Elegan,Ruang Tamu
+SOF-VEL-001-,SOF-VEL-001-,Kain Sofa,Velvet Premium,,Sofa Fabric,"Rp 145,000",meter,ATEJA,Jakarta,140 cm,400 Gsm,Polyester Blend,Tahan Gesekan,Ruang Tamu
+BLI-ROL-001-,BLI-ROL-001-,Blinds,Roller Blind Sunscreen,,Blinds,"Rp 250,000",m2,SHARP,Jakarta,250 cm,500 Gsm,PVC Polyester,Anti UV 95%,Kantor & Jendela
+WAL-VIN-001-,WAL-VIN-001-,Wallpaper,Vinyl Textured,,Wallpaper,"Rp 180,000",roll,KOR,Bandung,53 cm,150 Gsm,Vinyl Paper,Mudah Diberishkan,Kamar & Ruang Tamu
+WPN-WPC-001-,WPN-WPC-001-,Wallpanel,WPC Fluted Panel,,Wallpanel,"Rp 135,000",batang,DTI,Jakarta,15 cm,1200 Gsm,Wood Plastic Composite,Anti Rayap,Dinding Aksen
+FLO-SPC-001-,FLO-SPC-001-,Flooring,SPC Click Lock 4mm,,Flooring,"Rp 195,000",m2,DTI,Jakarta,18 cm,8000 Gsm,Stone Plastic Composite,100% Anti Air,Lantai Ruangan
+KAR-RUG-001-,KAR-RUG-001-,Karpet,Rug Modern Minimalis,,Karpet,"Rp 850,000",pcs,MOD,Surabaya,160 cm,2500 Gsm,Polypropylene,Lembut & Tebal,Ruang Keluarga
+STK-SND-001-,STK-SND-001-,Sticker Kaca,Sandblast Polos 90cm,,Sticker Kaca,"Rp 35,000",meter,DTI,Jakarta,90 cm,140 Gsm,PVC Film,Privasi Ruangan,Kaca Kantor & Jendela`;
             parseCSV(sampleCSV);
         }
     </script>
