@@ -15,7 +15,7 @@
             --surface-light: #2a2a2a;
             --primary: #0a0a0a;
             --primary-light: #171717;
-            --accent: #dc2626; /* Merah Brand Toko */
+            --accent: #dc2626;
             --accent-hover: #b91c1c;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -61,7 +61,7 @@
             padding-bottom: 4rem;
         }
 
-        /* Header / Navbar (Dibuat Tidak Sticky Agar Hemat Tempat Saat Scroll) */
+        /* Header / Navbar */
         header {
             background: var(--surface);
             border-bottom: 2px solid var(--accent);
@@ -200,7 +200,7 @@
             margin-top: 0.1rem;
         }
 
-        /* --- STICKY TOOLBAR (FREEZE SCAN + SEARCH BAR) --- */
+        /* --- STICKY TOOLBAR --- */
         .sticky-toolbar {
             position: sticky;
             top: 0;
@@ -331,7 +331,6 @@
             color: white;
             box-shadow: var(--shadow-sm);
         }
-        /* --- END STICKY TOOLBAR --- */
 
         /* Table View */
         .table-container {
@@ -404,7 +403,7 @@
             color: var(--price-color);
         }
 
-        /* --- KUSTOMISASI WARNA BADGE KATEGORI (9 KATEGORI) --- */
+        /* --- KUSTOMISASI WARNA BADGE KATEGORI --- */
         .category-tag {
             display: inline-block;
             padding: 0.25rem 0.65rem;
@@ -416,86 +415,35 @@
             white-space: nowrap;
         }
 
-        /* 1. Gorden (Biru / Blue) */
-        .cat-gorden {
-            background: rgba(59, 130, 246, 0.15);
-            color: #60a5fa;
-            border-color: rgba(59, 130, 246, 0.3);
-        }
+        .cat-gorden { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
         [data-theme="light"] .cat-gorden { background: #dbeafe; color: #1e40af; border-color: #bfdbfe; }
 
-        /* 2. Vitrase (Cyan / Sky Blue) */
-        .cat-vitrase {
-            background: rgba(6, 182, 212, 0.15);
-            color: #22d3ee;
-            border-color: rgba(6, 182, 212, 0.3);
-        }
+        .cat-vitrase { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border-color: rgba(6, 182, 212, 0.3); }
         [data-theme="light"] .cat-vitrase { background: #cffafe; color: #155e75; border-color: #a5f3fc; }
 
-        /* 3. Kain Sofa (Ungu / Indigo) */
-        .cat-sofa {
-            background: rgba(139, 92, 246, 0.15);
-            color: #a78bfa;
-            border-color: rgba(139, 92, 246, 0.3);
-        }
+        .cat-sofa { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border-color: rgba(139, 92, 246, 0.3); }
         [data-theme="light"] .cat-sofa { background: #ede9fe; color: #5b21b6; border-color: #ddd6fe; }
 
-        /* 4. Blinds (Oranye / Amber) */
-        .cat-blinds {
-            background: rgba(245, 158, 11, 0.15);
-            color: #fbbf24;
-            border-color: rgba(245, 158, 11, 0.3);
-        }
+        .cat-blinds { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
         [data-theme="light"] .cat-blinds { background: #fef3c7; color: #92400e; border-color: #fde68a; }
 
-        /* 5. Wallpaper (Hijau Emerald) */
-        .cat-wallpaper {
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            border-color: rgba(16, 185, 129, 0.3);
-        }
+        .cat-wallpaper { background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.3); }
         [data-theme="light"] .cat-wallpaper { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
 
-        /* 6. Wallpanel (Hijau Lime / Yellow-Green) */
-        .cat-wallpanel {
-            background: rgba(132, 204, 22, 0.15);
-            color: #a3e635;
-            border-color: rgba(132, 204, 22, 0.3);
-        }
+        .cat-wallpanel { background: rgba(132, 204, 22, 0.15); color: #a3e635; border-color: rgba(132, 204, 22, 0.3); }
         [data-theme="light"] .cat-wallpanel { background: #ecfccb; color: #3f6212; border-color: #d9f99d; }
 
-        /* 7. Flooring (Cokelat Kayu / Warm Brown) */
-        .cat-flooring {
-            background: rgba(180, 83, 9, 0.15);
-            color: #fb923c;
-            border-color: rgba(180, 83, 9, 0.3);
-        }
+        .cat-flooring { background: rgba(180, 83, 9, 0.15); color: #fb923c; border-color: rgba(180, 83, 9, 0.3); }
         [data-theme="light"] .cat-flooring { background: #ffedd5; color: #9a3412; border-color: #fed7aa; }
 
-        /* 8. Karpet (Merah Muda / Rose Pink) */
-        .cat-karpet {
-            background: rgba(236, 72, 153, 0.15);
-            color: #f472b6;
-            border-color: rgba(236, 72, 153, 0.3);
-        }
+        .cat-karpet { background: rgba(236, 72, 153, 0.15); color: #f472b6; border-color: rgba(236, 72, 153, 0.3); }
         [data-theme="light"] .cat-karpet { background: #fce7f3; color: #9d174d; border-color: #fbcfe8; }
 
-        /* 9. Sticker Kaca (Merah Brand / Crimson) */
-        .cat-sticker {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border-color: rgba(239, 68, 68, 0.4);
-        }
+        .cat-sticker { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4); }
         [data-theme="light"] .cat-sticker { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
 
-        /* Default Kategori Lainnya (Abu-abu) */
-        .cat-default {
-            background: rgba(148, 163, 184, 0.15);
-            color: #cbd5e1;
-            border-color: rgba(148, 163, 184, 0.3);
-        }
+        .cat-default { background: rgba(148, 163, 184, 0.15); color: #cbd5e1; border-color: rgba(148, 163, 184, 0.3); }
         [data-theme="light"] .cat-default { background: #f1f5f9; color: #475569; border-color: #e2e8f0; }
-        /* --- END WARNA BADGE KATEGORI --- */
 
         .btn-dropdown {
             background: var(--surface-light);
@@ -785,72 +733,36 @@
             opacity: 1;
         }
 
-        /* --- PENYESUAIAN LAYAR HP (RESPONSIVE OPTIMIZATION) --- */
+        /* --- PENYESUAIAN LAYAR HP --- */
         @media (max-width: 768px) {
-            header {
-                padding: 1rem;
-            }
-
-            .header-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .brand {
-                text-align: center;
-            }
-
-            .header-actions {
-                justify-content: center;
-            }
-
-            /* Stat Lebih Kompak (2x2) */
+            header { padding: 1rem; }
+            .header-container { flex-direction: column; align-items: stretch; }
+            .brand { text-align: center; }
+            .header-actions { justify-content: center; }
+            
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.5rem;
                 margin-bottom: 1rem;
             }
-
             .stat-card {
                 padding: 0.6rem 0.75rem;
                 gap: 0.6rem;
                 border-left-width: 3px;
             }
-
             .stat-icon {
                 width: 32px;
                 height: 32px;
                 font-size: 0.95rem;
                 border-radius: 8px;
             }
+            .stat-info h4 { font-size: 0.65rem; line-height: 1.2; }
+            .stat-info p { font-size: 1.1rem; }
 
-            .stat-info h4 {
-                font-size: 0.65rem;
-                line-height: 1.2;
-            }
-
-            .stat-info p {
-                font-size: 1.1rem;
-            }
-
-            /* Sticky Toolbar Lebih Rapat di HP */
-            .sticky-toolbar {
-                padding: 0.5rem 0 0.75rem 0;
-                margin-bottom: 1rem;
-            }
-
-            .controls {
-                padding: 0.75rem;
-            }
-
-            .filter-group {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
+            .sticky-toolbar { padding: 0.5rem 0 0.75rem 0; margin-bottom: 1rem; }
+            .controls { padding: 0.75rem; }
+            .filter-group { flex-direction: column; align-items: stretch; }
+            .detail-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -936,6 +848,7 @@
                 </div>
             </div>
         </div>
+
         <div id="tableView" class="table-container">
             <table>
                 <thead>
@@ -973,9 +886,16 @@
                 <button class="btn-close" onclick="closeScanner()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body" style="text-align: center;">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">
                     Arahkan kamera HP ke Barcode/QR Code yang tertempel di label fisik sampel showroom.
                 </p>
+                
+                <div id="zoomControlContainer" style="display: none; margin-bottom: 1rem; align-items: center; gap: 0.5rem; justify-content: center;">
+                    <i class="fa-solid fa-magnifying-glass-minus" style="color: var(--text-muted);"></i>
+                    <input type="range" id="zoomSlider" min="1" max="3" step="0.1" value="1" style="width: 200px; accent-color: var(--accent);">
+                    <i class="fa-solid fa-magnifying-glass-plus" style="color: var(--accent);"></i>
+                </div>
+                
                 <div id="reader"></div>
             </div>
             <div class="modal-footer" style="justify-content: center;">
@@ -996,7 +916,6 @@
                 <button class="btn-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="modal-body">
-                
                 <div class="spec-section">
                     <h4><i class="fa-solid fa-fingerprint"></i> 1. Identitas & Klasifikasi Produk</h4>
                     <div class="detail-grid">
@@ -1029,7 +948,6 @@
                         <div class="detail-item" style="grid-column: 1 / -1;"><label>Penggunaan / Rekomendasi Ruangan</label><div id="m_penggunaan">-</div></div>
                     </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button class="btn btn-outline" onclick="copyToClipboard(currentSelectedSku, 'SKU berhasil disalin!')">
@@ -1055,6 +973,7 @@
         let currentSelectedProduct = null;
         let currentSelectedSku = "";
         let html5QrcodeScanner = null;
+        let currentStreamTrack = null; // Menyimpan koneksi kamera untuk fitur Zoom
 
         document.addEventListener("DOMContentLoaded", () => {
             initTheme();
@@ -1062,7 +981,6 @@
             setupEventListeners();
         });
 
-        // --- FITUR LIGHT / DARK MODE (TEKS DIPERBARUI) ---
         function initTheme() {
             const savedTheme = localStorage.getItem("dti_theme") || "dark";
             document.documentElement.setAttribute("data-theme", savedTheme);
@@ -1080,7 +998,6 @@
         function updateThemeButton(theme) {
             const icon = document.getElementById("themeIcon");
             const text = document.getElementById("themeText");
-            // Jika sedang Light Mode, tombol menawarkan untuk pindah ke Dark Mode (dan sebaliknya)
             if (theme === "light") {
                 icon.className = "fa-solid fa-moon";
                 text.textContent = "Dark Mode";
@@ -1089,9 +1006,7 @@
                 text.textContent = "Light Mode";
             }
         }
-        // --- END TEMA ---
 
-        // --- HELPER WARNA BADGE KATEGORI OTOMATIS (9 KATEGORI) ---
         function getCategoryBadge(catName) {
             const cat = (catName || "").toLowerCase().trim();
             let cls = "cat-default";
@@ -1108,7 +1023,6 @@
             
             return `<span class="category-tag ${cls}">${catName || "-"}</span>`;
         }
-        // --- END HELPER KATEGORI ---
 
         function setupEventListeners() {
             document.getElementById("themeToggleBtn").addEventListener("click", toggleTheme);
@@ -1476,22 +1390,73 @@
             if (!html5QrcodeScanner) {
                 html5QrcodeScanner = new Html5Qrcode("reader");
             }
-            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            // Konfigurasi area scan sedikit diperkecil agar fokus ke tengah
+            const config = { fps: 10, qrbox: { width: 200, height: 200 } };
             
             html5QrcodeScanner.start(
                 { facingMode: "environment" }, 
                 config, 
                 onScanSuccess, 
                 onScanFailure
-            ).catch(err => {
+            ).then(() => {
+                // Berhasil buka kamera, coba inisialisasi ZOOM
+                setTimeout(initZoomControl, 1000); // Tunggu 1 detik agar stream stabil
+            }).catch(err => {
                 console.error("Gagal memulai kamera", err);
                 showToast("Izin kamera tidak diberikan atau kamera tidak tersedia.");
                 closeScanner();
             });
         }
 
+        // FITUR BARU: Inisialisasi Zoom & Slider
+        function initZoomControl() {
+            const videoElement = document.querySelector("#reader video");
+            if (!videoElement) return;
+
+            const stream = videoElement.srcObject;
+            if (stream && stream.getVideoTracks().length > 0) {
+                currentStreamTrack = stream.getVideoTracks()[0];
+                const capabilities = currentStreamTrack.getCapabilities();
+
+                // Cek apakah kamera HP mendukung fitur Zoom
+                if (capabilities.zoom) {
+                    const zoomSlider = document.getElementById("zoomSlider");
+                    const zoomContainer = document.getElementById("zoomControlContainer");
+                    
+                    zoomContainer.style.display = "flex"; // Tampilkan slider
+                    zoomSlider.min = capabilities.zoom.min || 1;
+                    zoomSlider.max = capabilities.zoom.max || 5;
+                    zoomSlider.step = capabilities.zoom.step || 0.1;
+                    
+                    // Auto-Zoom: Set otomatis ke 2x atau nilai tengah saat kamera dibuka
+                    let autoZoomValue = 2.0; 
+                    if (autoZoomValue > zoomSlider.max) autoZoomValue = zoomSlider.max;
+                    
+                    zoomSlider.value = autoZoomValue;
+                    applyZoom(autoZoomValue);
+
+                    // Event listener untuk geser manual
+                    zoomSlider.oninput = (e) => {
+                        applyZoom(parseFloat(e.target.value));
+                    };
+                }
+            }
+        }
+
+        function applyZoom(zoomValue) {
+            if (currentStreamTrack) {
+                currentStreamTrack.applyConstraints({
+                    advanced: [{ zoom: zoomValue }]
+                }).catch(err => console.log("Zoom tidak didukung atau error:", err));
+            }
+        }
+
         function closeScanner() {
             document.getElementById("scannerModal").classList.remove("active");
+            document.getElementById("zoomControlContainer").style.display = "none"; // Sembunyikan slider
+            currentStreamTrack = null;
+            
             if (html5QrcodeScanner && html5QrcodeScanner.isScanning) {
                 html5QrcodeScanner.stop().then(() => {
                     html5QrcodeScanner.clear();
